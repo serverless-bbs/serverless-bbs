@@ -10,6 +10,8 @@ export type Bindings = {
   REGISTER_ENABLED: boolean;
   R2_PUBLIC_URL: string;
   ASSETS: Fetcher;
+  RP_ID?: string;
+  ORIGIN?: string;
 };
 
 // User-related types

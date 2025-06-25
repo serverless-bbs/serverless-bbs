@@ -10,7 +10,7 @@ import {
 import type { RegistrationResponseJSON, AuthenticationResponseJSON } from '@simplewebauthn/types';
 
 import type { Bindings, Passkey } from '../types';
-import { getOrCreateUser, getUserPasskeys, getPasskeyById } from '../lib/passkeys';
+import { getOrCreateUser, getUser, getUserPasskeys, getPasskeyById } from '../lib/passkeys';
 
 // Extend the Hono Bindings type to include the variables from wrangler.toml
 type AuthBindings = Bindings;
@@ -29,6 +29,10 @@ app.post('/register/challenge', zValidator('json', registerChallengeSchema), asy
   }
   const { username, email } = c.req.valid('json');
   const { RP_NAME } = c.env;
+  const exists = await getUser(c.env.DB, username, email);
+  if (exists) {
+    return c.json({ error: `User exists` }, 400);
+  }
   const user = await getOrCreateUser(c.env.DB, username, email);
   const userPasskeys = await getUserPasskeys(c.env.DB, user.id);
   const url = new URL(c.req.url);

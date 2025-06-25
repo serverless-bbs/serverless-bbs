@@ -6,6 +6,12 @@ import type { D1Database } from '@cloudflare/workers-types';
  */
 
 // 获取或创建用户，用于 Passkey 注册
+export async function getUser(db: D1Database, username: string, email: string): Promise<User|null> {
+  // 检查用户是否已存在
+  let user = await db.prepare('SELECT * FROM Users WHERE username = ? OR email = ?').bind(username, email).first<User>();
+  return user;
+}
+
 export async function getOrCreateUser(db: D1Database, username: string, email: string): Promise<User> {
   // 检查用户是否已存在
   let user = await db.prepare('SELECT * FROM Users WHERE username = ? OR email = ?').bind(username, email).first<User>();
