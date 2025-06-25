@@ -17,6 +17,7 @@
     "db:migrations:apply": "wrangler d1 migrations apply DB --remote"
   },
   "dependencies": {
+    "@cloudflare/unenv-preset": "^2.3.3",
     "@cloudflare/vite-plugin": "^1.7.4",
     "@hono/zod-validator": "^0.2.1",
     "@radix-ui/number": "^1.1.1",
