@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { apiClient } from '@/lib/api';
-import ChevronRight from 'lucide-react/dist/esm/chevron-right';
-import Home from 'lucide-react/dist/esm/home';
+import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
+import Home from 'lucide-react/dist/esm/icons/home';
 
 // 定义面包屑每一项的类型
 interface Crumb {

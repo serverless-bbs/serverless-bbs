@@ -7,7 +7,7 @@ import { RichTextEditor } from '@/components/RichTextEditor';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/components/ui/use-toast"
 import Plus from 'lucide-react/dist/esm/icons/plus';
-import Trash2 from 'lucide-react/dist/esm/icons/trash2';
+import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
 import EyeOff from 'lucide-react/dist/esm/icons/eye-off';
 import { Checkbox } from '@/components/ui/checkbox';
 

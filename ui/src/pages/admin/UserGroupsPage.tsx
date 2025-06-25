@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from "@/components/ui/use-toast";
 import Pen from 'lucide-react/dist/esm/icons/pen';
-import Trash2 from 'lucide-react/dist/esm/icons/trash2';
+import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
 import { Link } from 'react-router-dom';
 
 interface UserGroup {
