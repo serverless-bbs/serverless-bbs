@@ -8,7 +8,10 @@ import { format } from 'date-fns';
 import { RichTextEditor } from '@/components/RichTextEditor';
 import type { ThreadWithDetails, PollOption, UserVote, Reply } from '../types'; // 从共享类型导入
 import defaultAvatar from '@/img/default_avatar.svg';
-import { Mail, EyeOff, Lock, MessageSquareQuote, Pen } from 'lucide-react';
+import Mail from 'lucide-react/dist/esm/icons/mail';
+import Lock from 'lucide-react/dist/esm/icons/lock';
+import MessageSquareQuote from 'lucide-react/dist/esm/icons/message-square-quote';
+import Pen from 'lucide-react/dist/esm/icons/pen';
 
 
 // --- 子组件 ---

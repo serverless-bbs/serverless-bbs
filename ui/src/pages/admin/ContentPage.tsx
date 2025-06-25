@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
 import { useToast } from "@/components/ui/use-toast";
 import { Link } from 'react-router-dom';
-import { Pin } from 'lucide-react';
+import Pin from 'lucide-react/dist/esm/icons/pin';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Node } from '@/../../worker/src/types';
 

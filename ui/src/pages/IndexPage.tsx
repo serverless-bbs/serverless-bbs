@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiClient } from '@/lib/api';
 import { format } from 'date-fns';
-import { MessageCircle } from 'lucide-react';
+import MessageCircle from 'lucide-react/dist/esm/icons/message-circle';
 
 // 更新前端的 Node 类型以匹配后端响应
 interface Node {

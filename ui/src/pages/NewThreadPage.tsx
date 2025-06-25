@@ -6,9 +6,10 @@ import { Input } from '@/components/ui/input';
 import { RichTextEditor } from '@/components/RichTextEditor';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/components/ui/use-toast"
-import { Plus, Trash2 } from 'lucide-react';
+import Plus from 'lucide-react/dist/esm/icons/plus';
+import Trash2 from 'lucide-react/dist/esm/icons/trash2';
+import EyeOff from 'lucide-react/dist/esm/icons/eye-off';
 import { Checkbox } from '@/components/ui/checkbox';
-import { EyeOff } from 'lucide-react';
 
 export default function NewThreadPage() {
   const { nodeId } = useParams<{ nodeId: string }>();

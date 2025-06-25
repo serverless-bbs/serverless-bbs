@@ -7,7 +7,8 @@ import { apiClient } from '@/lib/api';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import defaultAvatar from '@/img/default_avatar.svg';
-import { BadgeInfo, Mail } from 'lucide-react';
+import Mail from 'lucide-react/dist/esm/icons/mail';
+import BadgeInfo from 'lucide-react/dist/esm/icons/badge-info';
 import { toast } from '@/components/ui/use-toast';
 
 // --- 类型定义 ---

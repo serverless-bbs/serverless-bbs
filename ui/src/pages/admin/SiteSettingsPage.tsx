@@ -4,7 +4,8 @@ import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from "@/components/ui/use-toast";
-import { PlusCircle, Trash2 } from 'lucide-react';
+import PlusCircle from 'lucide-react/dist/esm/icons/plus-circle';
+import Trash2 from 'lucide-react/dist/esm/icons/trash2';
 import { Link } from 'react-router-dom';
 
 interface FriendlyLink { name: string; url: string; }

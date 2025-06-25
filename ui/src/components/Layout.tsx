@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { Select, SelectContent, SelectTrigger, SelectValue } from './ui/select';
 import { SelectItem } from '@radix-ui/react-select';
-import { Search } from 'lucide-react';
+import Search from 'lucide-react/dist/esm/search';
 import AuthPage from '@/pages/AuthPage';
 import defaultAvatar from '@/img/default_avatar.svg';
 import { toast } from './ui/use-toast';

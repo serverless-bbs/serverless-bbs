@@ -4,7 +4,7 @@ import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from "@/components/ui/use-toast";
-import { GripVertical, Trash2 } from 'lucide-react';
+import GripVertical from 'lucide-react/dist/esm/icons/grip-vertical';
 import { Link } from 'react-router-dom';
 
 interface Node {

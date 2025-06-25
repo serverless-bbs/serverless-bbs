@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { useAuth } from '@/hooks/useAuth';
-import { File, Lightbulb } from 'lucide-react';
+import File from 'lucide-react/dist/esm/icons/file';
+import Lightbulb from 'lucide-react/dist/esm/icons/lightbulb';
 
 interface Thread {
   id: number;

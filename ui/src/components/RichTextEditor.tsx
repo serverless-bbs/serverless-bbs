@@ -12,11 +12,20 @@ import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import Color from '@tiptap/extension-color';
 import TextStyle from '@tiptap/extension-text-style';
-import { 
-    Bold, Italic, Underline as UnderlineIcon, Strikethrough,
-    Palette, AlignLeft, AlignCenter, AlignRight, List, ListOrdered,
-    Image as ImageIcon, Paperclip, Smile, Table, Maximize
-} from 'lucide-react';
+import Bold from 'lucide-react/dist/esm/icons/bold';
+import Italic from 'lucide-react/dist/esm/icons/italic';
+import UnderlineIcon from 'lucide-react/dist/esm/icons/underline';
+import Strikethrough from 'lucide-react/dist/esm/icons/strikethrough';
+import Palette from 'lucide-react/dist/esm/icons/palette';
+import AlignLeft from 'lucide-react/dist/esm/icons/align-left';
+import AlignCenter from 'lucide-react/dist/esm/icons/align-center';
+import AlignRight from 'lucide-react/dist/esm/icons/align-right';
+import List from 'lucide-react/dist/esm/icons/list';
+import ListOrdered from 'lucide-react/dist/esm/icons/list-ordered';
+import Smile from 'lucide-react/dist/esm/icons/smile';
+import ImageIcon from 'lucide-react/dist/esm/icons/image';
+import Paperclip from 'lucide-react/dist/esm/icons/paperclip';
+import Table from 'lucide-react/dist/esm/icons/table';
 
 // --- 子组件 ---
 const ToolbarButton = ({ children, onClick, tip, isActive }: { children: React.ReactNode; onClick?: () => void; tip: string, isActive?: boolean }) => (
