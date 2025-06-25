@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { apiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Pin from 'lucide-react/dist/esm/icons/pin';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Node } from '@/../../worker/src/types';
@@ -34,7 +34,9 @@ const MoveThreadsModal = ({ onConfirm, onCancel, nodes }: { onConfirm: (targetNo
         <div className="p-6 space-y-4">
           <label className="text-sm">选择目标版块</label>
           <Select onValueChange={setTargetNodeId}>
-            <SelectTrigger><SelectValue placeholder="请选择版块..." /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue placeholder="请选择版块..." />
+            </SelectTrigger>
             <SelectContent>{nodes.map(node => <SelectItem key={node.id} value={String(node.id)}>{node.name}</SelectItem>)}</SelectContent>
           </Select>
         </div>
@@ -51,28 +53,38 @@ const ContentPage = () => {
   const [threads, setThreads] = useState<AdminThread[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [search, setSearch] = useState({ keyword: '', author: '' });
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState({
+    keyword: '',
+    author: searchParams.get('author') || '' // 修复：从 URL 参数初始化作者搜索
+  });
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false);
   const { toast } = useToast();
 
-  const fetchThreads = async () => {
-    const params = new URLSearchParams(search).toString();
+  const fetchThreads = useCallback(async () => {
+    const searchToUse = {
+      keyword: search.keyword,
+      author: search.author,
+    };
+    // 移除空的搜索参数以避免发送空查询
+    const params = new URLSearchParams(Object.fromEntries(Object.entries(searchToUse).filter(([_, v]) => v))).toString();
     const data = await apiClient.get<AdminThread[]>(`/admin/threads?${params}`);
     setThreads(data || []);
-  };
+  }, [search]);
 
-  useEffect(() => { fetchThreads(); }, []);
+  const fetchNodes = useCallback(async () => {
+    const data = await apiClient.get<Node[]>('/nodes');
+    setNodes(data.filter(node => !!node.parent_node_id) || []);
+  }, []);
 
-  const fetchNodes = async () => { const data = await apiClient.get<Node[]>('/nodes'); setNodes(data.filter(node => !!node.parent_node_id) || []); };
-
-  useEffect(() => { fetchThreads(); fetchNodes(); }, []);
+  useEffect(() => {
+    fetchThreads();
+    fetchNodes();
+  }, [fetchThreads, fetchNodes]);
 
   const handleSelectAll = (checked: boolean | 'indeterminate') => {
-    if (checked === true) {
-      setSelectedIds(threads.map(t => t.id));
-    } else {
-      setSelectedIds([]);
-    }
+    if (checked === true) { setSelectedIds(threads.map(t => t.id)); }
+    else { setSelectedIds([]); }
   };
 
   const handleSelectOne = (id: number, checked: boolean) => {
@@ -80,19 +92,12 @@ const ContentPage = () => {
   };
 
   const handleBatchAction = async (action: 'pin' | 'unpin' | 'delete' | 'move', targetNodeId?: number) => {
-    if (selectedIds.length === 0) {
-      toast({ title: "提示", description: "请至少选择一个帖子。" });
-      return;
-    }
+    if (selectedIds.length === 0) { toast({ title: "提示", description: "请至少选择一个帖子。" }); return; }
     try {
       let res;
-      if (action === 'delete') {
-        res = await apiClient.delete(`/admin/threads`, { ids: selectedIds }) as any;
-      } else if (action === 'move') {
-        res = await apiClient.put('/admin/threads/move', { ids: selectedIds, targetNodeId }) as any;
-      } else {
-        res = await apiClient.put('/admin/threads/pin', { ids: selectedIds, isPinned: action === 'pin' }) as any;
-      }
+      if (action === 'delete') res = await apiClient.delete(`/admin/threads`, { ids: selectedIds }) as any;
+      else if (action === 'move') res = await apiClient.put('/admin/threads/move', { ids: selectedIds, targetNodeId }) as any;
+      else res = await apiClient.put('/admin/threads/pin', { ids: selectedIds, isPinned: action === 'pin' }) as any;
       toast({ title: "成功", description: res.message });
       setSelectedIds([]);
       fetchThreads();
@@ -129,10 +134,7 @@ const ContentPage = () => {
         <thead>
           <tr className="bg-gray-100 text-left">
             <th className="p-2 w-10">
-              <Checkbox
-                onCheckedChange={handleSelectAll}
-                checked={isAllSelected ? true : (isPartialSelected ? 'indeterminate' : false)}
-              />
+              <Checkbox onCheckedChange={handleSelectAll} checked={isAllSelected ? true : (isPartialSelected ? 'indeterminate' : false)} />
             </th>
             <th className="p-2">标题</th>
             <th className="p-2 w-32">作者</th>
@@ -145,17 +147,16 @@ const ContentPage = () => {
           {threads.map(thread => (
             <tr key={thread.id} className="border-b">
               <td className="p-2">
-                <Checkbox
-                  checked={selectedIds.includes(thread.id)}
-                  onCheckedChange={(checked) => handleSelectOne(thread.id, !!checked)}
-                />
+                <Checkbox checked={selectedIds.includes(thread.id)} onCheckedChange={(checked) => handleSelectOne(thread.id, !!checked)} />
               </td>
-              <td className="p-2 flex items-center">
-                {!!thread.is_pinned && <Pin className="w-4 h-4 text-orange-500 mr-2 shrink-0" />}
-                <Link to={`/threads/${thread.id}`} className="text-blue-600 hover:underline truncate">{thread.title}</Link>
+              <td className="p-2 flex items-center">{!!thread.is_pinned && <Pin className="w-4 h-4 text-orange-500 mr-2 shrink-0" />}<Link to={`/threads/${thread.id}`} className="text-blue-600 hover:underline truncate">{thread.title}</Link>
               </td>
-              <td className="p-2"><Link to={`/admin/users?uid=${thread.author_id}`} className="text-blue-600 hover:underline">{thread.author}</Link></td>
-              <td className="p-2"><Link to={`/nodes/${thread.node_id}`} className="text-blue-600 hover:underline">{thread.node_name}</Link></td>
+              <td className="p-2">
+                <Link to={`/admin/users?uid=${thread.author_id}`} className="text-blue-600 hover:underline">{thread.author}</Link>
+              </td>
+              <td className="p-2">
+                <Link to={`/nodes/${thread.node_id}`} className="text-blue-600 hover:underline">{thread.node_name}</Link>
+              </td>
               <td className="p-2">{format(new Date(thread.created_at * 1000), 'yyyy-MM-dd HH:mm')}</td>
               <td className="p-2">{thread.reply_count} / {thread.view_count}</td>
             </tr>

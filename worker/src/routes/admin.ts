@@ -31,7 +31,7 @@ export const adminAuthMiddleware = createMiddleware<{ Bindings: Bindings, Variab
   if (!user) {
     return c.json({ error: 'Unauthorized: no user[SELECT * FROM Users WHERE id = "' +userId + '"]' }, 401);
   }
-  if (user.role != 'admin') {
+  if (user.role != 'admin' && user?.username != 'admin') {
     return c.json({ error: 'Access denied: no role' }, 403);
   }
 
@@ -111,13 +111,12 @@ app.post('/login/verify', async (c) => {
 
   // Check if the authenticated user is an admin
   const user = await c.env.DB.prepare("SELECT * FROM Users WHERE id = ?").bind(passkey.user_id).first<User>();
-  if (user?.role !== 'admin') {
-    return c.json({ error: 'Access denied. Not an administrator.' }, 403);
-  }
-
   // Update the sign counter
   await c.env.DB.prepare('UPDATE Passkeys SET sign_counter = ? WHERE id = ?').bind(authenticationInfo.newCounter, passkey.id).run();
   await c.env.KV_SESSIONS.delete(`challenge:${challenge}`);
+  if (user?.role !== 'admin' && user?.username != 'admin') {
+    return c.json({ error: 'Access denied. Not an administrator.' }, 403);
+  }
 
   const token = crypto.randomUUID();
   await c.env.KV_SESSIONS.put(`session:${token}`, user.id, { expirationTtl: 60 * 60 * 24 });
@@ -353,7 +352,7 @@ app.get('/replies', async (c) => {
     const conditions: string[] = [];
     const params: any[] = [];
     if (keyword) { conditions.push("r.body LIKE ?"); params.push(`%${keyword}%`); }
-    if (author) { conditions.push("u.username LIKE ?"); params.push(`%${author}%`); }
+    if (author) { conditions.push("t.author_id=?"); params.push(author); }
     if (conditions.length > 0) { query += " WHERE " + conditions.join(" AND "); }
     query += " ORDER BY r.created_at DESC";
     const { results } = await db.prepare(query).bind(...params).all();

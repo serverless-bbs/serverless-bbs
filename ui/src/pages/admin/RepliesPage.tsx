@@ -6,18 +6,26 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 interface AdminReply { id: number; body: string; created_at: number; author: string; author_id: string; thread_id: number; thread_title: string; node_id: number; node_name: string; }
 
 const RepliesPage = () => {
   const [replies, setReplies] = useState<AdminReply[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [search, setSearch] = useState({ keyword: '', author: '' });
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState({
+    keyword: '',
+    author: searchParams.get('author') || '' // 修复：从 URL 参数初始化作者搜索
+  });
   const { toast } = useToast();
 
   const fetchReplies = useCallback(async () => {
-    const params = new URLSearchParams(search).toString();
+    const searchToUse = {
+      keyword: search.keyword,
+      author: search.author,
+    };
+    const params = new URLSearchParams(Object.fromEntries(Object.entries(searchToUse).filter(([_, v]) => v))).toString();
     const data = await apiClient.get<AdminReply[]>(`/admin/replies?${params}`);
     setReplies(data || []);
   }, [search]);
@@ -65,7 +73,9 @@ const RepliesPage = () => {
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-gray-100 text-left">
-            <th className="p-2 w-10"><Checkbox onCheckedChange={handleSelectAll} checked={isAllSelected ? true : (isPartialSelected ? 'indeterminate' : false)} /></th>
+            <th className="p-2 w-10">
+              <Checkbox onCheckedChange={handleSelectAll} checked={isAllSelected ? true : (isPartialSelected ? 'indeterminate' : false)} />
+            </th>
             <th className="p-2">内容</th>
             <th className="p-2 w-32">作者</th>
             <th className="p-2 w-48">版块</th>
@@ -76,11 +86,21 @@ const RepliesPage = () => {
         <tbody>
           {replies.map(reply => (
             <tr key={reply.id} className="border-b">
-              <td className="p-2"><Checkbox checked={selectedIds.includes(reply.id)} onCheckedChange={(c) => handleSelectOne(reply.id, !!c)} /></td>
-              <td className="p-2"><Link to={`/threads/${reply.thread_id}#reply-${reply.id}`} className="text-blue-600 hover:underline" dangerouslySetInnerHTML={{ __html: reply.body.substring(0, 50) + '...' }} /></td>
-              <td className="p-2"><Link to={`/admin/users?uid=${reply.author_id}`} className="text-blue-600 hover:underline">{reply.author}</Link></td>
-              <td className="p-2"><Link to={`/nodes/${reply.node_id}`} className="text-blue-600 hover:underline truncate">{reply.node_name}</Link></td>
-              <td className="p-2"><Link to={`/threads/${reply.thread_id}`} className="text-blue-600 hover:underline truncate">{reply.thread_title}</Link></td>
+              <td className="p-2">
+                <Checkbox checked={selectedIds.includes(reply.id)} onCheckedChange={(c) => handleSelectOne(reply.id, !!c)} />
+              </td>
+              <td className="p-2">
+                <Link to={`/threads/${reply.thread_id}#reply-${reply.id}`} className="text-blue-600 hover:underline" dangerouslySetInnerHTML={{ __html: reply.body.substring(0, 50) + '...' }} />
+              </td>
+              <td className="p-2">
+                <Link to={`/admin/users?uid=${reply.author_id}`} className="text-blue-600 hover:underline">{reply.author}</Link>
+              </td>
+              <td className="p-2">
+                <Link to={`/nodes/${reply.node_id}`} className="text-blue-600 hover:underline truncate">{reply.node_name}</Link>
+              </td>
+              <td className="p-2">
+                <Link to={`/threads/${reply.thread_id}`} className="text-blue-600 hover:underline truncate">{reply.thread_title}</Link>
+              </td>
               <td className="p-2">{format(new Date(reply.created_at * 1000), 'yyyy-MM-dd HH:mm')}</td>
             </tr>
           ))}

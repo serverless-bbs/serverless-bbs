@@ -6,7 +6,7 @@ import type { D1Database } from '@cloudflare/workers-types';
  */
 
 // 获取或创建用户，用于 Passkey 注册
-export async function getUser(db: D1Database, username: string, email: string): Promise<User|null> {
+export async function getUser(db: D1Database, username: string, email: string): Promise<User | null> {
   // 检查用户是否已存在
   let user = await db.prepare('SELECT * FROM Users WHERE username = ? OR email = ?').bind(username, email).first<User>();
   return user;
@@ -18,7 +18,7 @@ export async function getOrCreateUser(db: D1Database, username: string, email: s
   if (user) {
     return user;
   }
-  
+
   // 创建新用户
   const newUserId = crypto.randomUUID();
   const now = Math.floor(Date.now() / 1000);
@@ -38,7 +38,7 @@ export async function getOrCreateUser(db: D1Database, username: string, email: s
     db.prepare('INSERT INTO Credits (user_id, last_updated) VALUES (?, ?)')
       .bind(newUser.id, now)
   ]);
-  
+
   return newUser;
 }
 
@@ -50,5 +50,5 @@ export async function getUserPasskeys(db: D1Database, userId: string): Promise<P
 
 // 获取指定 ID 的 Passkey
 export async function getPasskeyById(db: D1Database, id: string): Promise<Passkey | null> {
-    return await db.prepare('SELECT * FROM Passkeys WHERE id = ?').bind(id).first<Passkey>();
+  return await db.prepare('SELECT * FROM Passkeys WHERE id = ?').bind(id).first<Passkey>();
 }
