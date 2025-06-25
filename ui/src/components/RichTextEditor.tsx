@@ -38,7 +38,7 @@ const ColorPicker = ({ editor }: { editor: any }) => {
     const colors = ['#000000', '#FF0000', '#FFA500', '#FFFF00', '#008000', '#0000FF', '#800080'];
     return (
         <Popover>
-            <PopoverTrigger asChild><ToolbarButton tip="颜色"><Palette size={16}/></ToolbarButton></PopoverTrigger>
+            <PopoverTrigger asChild><ToolbarButton tip="颜色"><Palette size={16} /></ToolbarButton></PopoverTrigger>
             <PopoverContent className="w-auto p-1">
                 <div className="grid grid-cols-7 gap-1">
                     {colors.map(color => (
@@ -86,7 +86,7 @@ export const RichTextEditor = ({ value, onChange }: { value: string, onChange: (
         const formData = new FormData();
         const endpoint = type === 'image' ? '/images' : '/attachments';
         formData.append(type, file);
-        
+
         try {
             const res = await apiClient.postFormData<{ url: string, fileName?: string }>(endpoint, formData);
             if (type === 'image') {
@@ -105,32 +105,32 @@ export const RichTextEditor = ({ value, onChange }: { value: string, onChange: (
         <div className="border border-gray-300 rounded-sm bg-white">
             <div className="flex items-center justify-between p-1 border-b border-gray-200 bg-gray-50 flex-wrap">
                 <div className="flex items-center flex-wrap">
-                    <Select onValueChange={(val) => val === 'p' ? editor.chain().focus().setParagraph().run() : editor.chain().focus().toggleHeading({ level: parseInt(val) as any }).run()}><SelectTrigger className="w-24 h-6 text-xs mr-1"><SelectValue placeholder="大小" /></SelectTrigger><SelectContent><SelectItem value="p">段落</SelectItem>{[1,2,3,4,5,6].map(h => <SelectItem key={h} value={`${h}`}>标题 {h}</SelectItem>)}</SelectContent></Select>
+                    <Select onValueChange={(val) => val === 'p' ? editor.chain().focus().setParagraph().run() : editor.chain().focus().toggleHeading({ level: parseInt(val) as any }).run()}><SelectTrigger className="w-24 h-6 text-xs mr-1"><SelectValue placeholder="大小" /></SelectTrigger><SelectContent><SelectItem value="p">段落</SelectItem>{[1, 2, 3, 4, 5, 6].map(h => <SelectItem key={h} value={`${h}`}>标题 {h}</SelectItem>)}</SelectContent></Select>
                     <div className="h-4 border-l mx-1"></div>
-                    <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive('bold')} tip="加粗"><Bold size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => editor.chain().focus().toggleItalic().run()} isActive={editor.isActive('italic')} tip="斜体"><Italic size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => editor.chain().focus().toggleUnderline().run()} isActive={editor.isActive('underline')} tip="下划线"><UnderlineIcon size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => editor.chain().focus().toggleStrike().run()} isActive={editor.isActive('strike')} tip="删除线"><Strikethrough size={16}/></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()} isActive={editor.isActive('bold')} tip="加粗"><Bold size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().toggleItalic().run()} isActive={editor.isActive('italic')} tip="斜体"><Italic size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().toggleUnderline().run()} isActive={editor.isActive('underline')} tip="下划线"><UnderlineIcon size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().toggleStrike().run()} isActive={editor.isActive('strike')} tip="删除线"><Strikethrough size={16} /></ToolbarButton>
                     <ColorPicker editor={editor} />
                     <div className="h-4 border-l mx-1"></div>
-                    <ToolbarButton onClick={() => editor.chain().focus().setTextAlign('left').run()} isActive={editor.isActive({ textAlign: 'left' })} tip="居左"><AlignLeft size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => editor.chain().focus().setTextAlign('center').run()} isActive={editor.isActive({ textAlign: 'center' })} tip="居中"><AlignCenter size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => editor.chain().focus().setTextAlign('right').run()} isActive={editor.isActive({ textAlign: 'right' })} tip="居右"><AlignRight size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => editor.chain().focus().toggleBulletList().run()} isActive={editor.isActive('bulletList')} tip="无序列表"><List size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => editor.chain().focus().toggleOrderedList().run()} isActive={editor.isActive('orderedList')} tip="有序列表"><ListOrdered size={16}/></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().setTextAlign('left').run()} isActive={editor.isActive({ textAlign: 'left' })} tip="居左"><AlignLeft size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().setTextAlign('center').run()} isActive={editor.isActive({ textAlign: 'center' })} tip="居中"><AlignCenter size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().setTextAlign('right').run()} isActive={editor.isActive({ textAlign: 'right' })} tip="居右"><AlignRight size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().toggleBulletList().run()} isActive={editor.isActive('bulletList')} tip="无序列表"><List size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => editor.chain().focus().toggleOrderedList().run()} isActive={editor.isActive('orderedList')} tip="有序列表"><ListOrdered size={16} /></ToolbarButton>
                     <div className="h-4 border-l mx-1"></div>
-                    <ToolbarButton onClick={() => {}} tip="表情"><Smile size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => imageInputRef.current?.click()} tip="图片"><ImageIcon size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => attachmentInputRef.current?.click()} tip="附件"><Paperclip size={16}/></ToolbarButton>
-                    <ToolbarButton onClick={() => {}} tip="表格"><Table size={16}/></ToolbarButton>
+                    <ToolbarButton onClick={() => { }} tip="表情"><Smile size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => imageInputRef.current?.click()} tip="图片"><ImageIcon size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => attachmentInputRef.current?.click()} tip="附件"><Paperclip size={16} /></ToolbarButton>
+                    <ToolbarButton onClick={() => { }} tip="表格"><Table size={16} /></ToolbarButton>
                 </div>
                 <div className="flex items-center">
-                     <Button variant="link" size="sm" className="text-xs text-gray-500">全屏</Button>
+                    <Button variant="link" size="sm" className="text-xs text-gray-500">全屏</Button>
                 </div>
             </div>
-            
+
             <EditorContent editor={editor} />
-            
+
             <input type="file" accept="image/*" ref={imageInputRef} onChange={(e) => e.target.files && handleFileUpload(e.target.files[0], 'image')} className="hidden" />
             <input type="file" ref={attachmentInputRef} onChange={(e) => e.target.files && handleFileUpload(e.target.files[0], 'attachment')} className="hidden" />
         </div>
