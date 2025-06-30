@@ -1,6 +1,6 @@
 node_modules/
 .wrangler/
-ui/dist
+dist
 package-lock.json
 
 # Yarn
