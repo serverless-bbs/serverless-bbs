@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        const userData = await apiClient.get<User>('/users/me');
+        const userData = await apiClient.post<User>('/users/me', {});
         setUser(userData);
       } catch (error) {
         console.error("Failed to fetch user, token might be invalid.", error);

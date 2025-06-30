@@ -5,7 +5,7 @@ import type { Bindings, User } from '../types';
 const app = new Hono<{ Bindings: Bindings, Variables: { user: User } }>();
 
 // 获取指定用户的公开信息
-app.get('/:id', async (c) => {
+app.all('/:id', async (c) => {
   const id = c.req.param('id');
   if (id == 'me') {
     const user = c.get('user');
